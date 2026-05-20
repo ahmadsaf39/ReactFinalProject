@@ -1,3 +1,3 @@
-export const Dashboard = () => {
-  return <div>Dashboard</div>
+export default function Dashboard() {
+  return <div className="p-6">Dashboard</div>;
 }
