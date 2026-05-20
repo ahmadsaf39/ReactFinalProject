@@ -80,6 +80,4 @@ export const useNodes = () => {
 };
 
 export default useNodes;
-export const useNodes = () => {
-  return [] as any[]
-}
+
