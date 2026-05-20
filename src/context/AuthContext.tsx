@@ -1,7 +1,7 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState, type PropsWithChildren } from 'react';
 import { authApi } from '../api/authApi';
 import { tokenStorage } from '../utils/tokenStorage';
-import type { AuthContextType, AuthResponse, LoginRequest, SignupRequest } from '../types/Auth';
+import type { AuthContextType, LoginRequest, SignupRequest } from '../types/Auth';
 
 export const AuthContext = createContext<AuthContextType | null>(null);
 
@@ -27,18 +27,31 @@ export const AuthProvider = ({ children }: PropsWithChildren<unknown>) => {
   const login = useCallback(async (data: LoginRequest) => {
     const response = await authApi.login(data);
     tokenStorage.set(response.data.token);
-    setUser(response.data.user);
+    tokenStorage.setRefreshToken(response.data.refreshToken);
+    setUser({
+      id: response.data.id,
+      username: response.data.username,
+      email: response.data.email,
+      isAdmin: response.data.isAdmin,
+    });
   }, []);
 
   const signup = useCallback(async (data: SignupRequest) => {
     const response = await authApi.signup(data);
     tokenStorage.set(response.data.token);
-    setUser(response.data.user);
+    tokenStorage.setRefreshToken(response.data.refreshToken);
+    setUser({
+      id: response.data.id,
+      username: response.data.username,
+      email: response.data.email,
+      isAdmin: response.data.isAdmin,
+    });
   }, []);
 
   const logout = useCallback(async () => {
     await authApi.logout();
     tokenStorage.clear();
+    tokenStorage.clearRefreshToken();
     setUser(null);
   }, []);
 
