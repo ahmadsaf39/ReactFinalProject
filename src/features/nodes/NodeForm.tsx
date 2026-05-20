@@ -12,13 +12,18 @@ interface Props {
 const NODE_TYPES = ['Router', 'Switch', 'Host'] as const;
 
 export default function NodeForm({ initialData = null, onSubmit, onCancel, loading = false }: Props) {
-  const [name, setName] = useState(initialData?.name ?? '');
-  const [type, setType] = useState(initialData?.type ?? NODE_TYPES[0]);
+  const [formData, setFormData] = useState(() => ({
+    name: initialData?.name ?? '',
+    type: initialData?.type ?? NODE_TYPES[0],
+  }));
+
   const [errors, setErrors] = useState<{ name?: string; type?: string }>({});
 
   useEffect(() => {
-    setName(initialData?.name ?? '');
-    setType(initialData?.type ?? NODE_TYPES[0]);
+    setFormData({
+      name: initialData?.name ?? '',
+      type: initialData?.type ?? NODE_TYPES[0],
+    });
     setErrors({});
   }, [initialData]);
 
@@ -26,8 +31,8 @@ export default function NodeForm({ initialData = null, onSubmit, onCancel, loadi
 
   const validate = () => {
     const e: typeof errors = {};
-    if (!name.trim()) e.name = 'Name is required';
-    if (!type) e.type = 'Type is required';
+    if (!formData.name.trim()) e.name = 'Name is required';
+    if (!formData.type) e.type = 'Type is required';
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -35,15 +40,15 @@ export default function NodeForm({ initialData = null, onSubmit, onCancel, loadi
   const handleSubmit = async (e?: React.FormEvent) => {
     e?.preventDefault();
     if (!validate()) return;
-    await onSubmit({ name: name.trim(), type });
+    await onSubmit({ name: formData.name.trim(), type: formData.type });
   };
 
   return (
     <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2, minWidth: 320 }}>
       <TextField
         label="Name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
+        value={formData.name}
+        onChange={(e) => setFormData((s) => ({ ...s, name: e.target.value }))}
         error={Boolean(errors.name)}
         helperText={errors.name}
         fullWidth
@@ -52,8 +57,8 @@ export default function NodeForm({ initialData = null, onSubmit, onCancel, loadi
       <TextField
         select
         label="Type"
-        value={type}
-        onChange={(e) => setType(e.target.value)}
+        value={formData.type}
+        onChange={(e) => setFormData((s) => ({ ...s, type: e.target.value }))}
         error={Boolean(errors.type)}
         helperText={errors.type}
         fullWidth
