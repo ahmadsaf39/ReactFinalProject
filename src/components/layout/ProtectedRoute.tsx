@@ -1,22 +1,26 @@
-import { useEffect } from 'react';
+import { Navigate } from 'react-router-dom';
+import { CircularProgress, Box } from '@mui/material';
 import { useAuth } from '../../hooks/useAuth';
+import type { ReactNode } from 'react';
 
 interface ProtectedRouteProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
-export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
-  const { isAuthenticated } = useAuth();
+export default function ProtectedRoute({ children }: ProtectedRouteProps) {
+  const { isAuthenticated, isLoading } = useAuth();
 
-  useEffect(() => {
-    if (!isAuthenticated) {
-      window.location.href = '/login';
-    }
-  }, [isAuthenticated]);
+  if (isLoading) {
+    return (
+      <Box className="flex items-center justify-center min-h-screen">
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   if (!isAuthenticated) {
-    return null;
+    return <Navigate to="/login" replace />;
   }
 
   return <>{children}</>;
-};
+}

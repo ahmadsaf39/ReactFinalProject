@@ -1,10 +1,17 @@
-import { SignupForm } from './SignupForm';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
+import SignupForm from './SignupForm';
 
-export const SignupPage = () => {
-  return (
-    <div>
-      <h1>Sign Up</h1>
-      <SignupForm />
-    </div>
-  );
-};
+export default function SignupPage() {
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/');
+    }
+  }, [isAuthenticated, navigate]);
+
+  return <SignupForm />;
+}
