@@ -43,6 +43,4 @@ export default function NodeTable({ nodes, onEdit, onDelete }: Props) {
     </TableContainer>
   );
 }
-export const NodeTable = () => {
-  return <div>NodeTable</div>
-}
+
