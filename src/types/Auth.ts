@@ -2,6 +2,7 @@ export interface User {
   id: number;
   username: string;
   email: string;
+  isAdmin: boolean;
 }
 
 export interface LoginRequest {
@@ -15,9 +16,9 @@ export interface SignupRequest {
   password: string;
 }
 
-export interface AuthResponse {
+export interface AuthResponse extends User {
   token: string;
-  user: User;
+  refreshToken: string;
 }
 
 export interface AuthContextType {
