@@ -76,6 +76,4 @@ export default function NodeForm({ initialData = null, onSubmit, onCancel, loadi
     </Box>
   );
 }
-export const NodeForm = () => {
-  return <div>NodeForm</div>
-}
+
